@@ -11,7 +11,7 @@ namespace Task1
             
             var polynomial = SourceData.Polynomial;
             var sourceGreed = SourceData.CreateSourceGreed();
-            var sourceValues = SourceData.CreateSourceValues(sourceGreed, SourceData.InvokeSourceFunction);
+            var sourceValues = SourceData.CreateSourceValues(sourceGreed);
             var resultGreed = SourceData.CreateResultGreed();
 
             PrintSource(polynomial, sourceGreed, sourceValues, resultGreed);
