@@ -44,7 +44,7 @@ namespace Task2
 		{
 			double h = (_b - _a) / N;
 			double sum = Function(_a) + Function(_b);
-			for (int i = 1; i < N - 1; i++)
+			for (int i = 1; i < N; i++)
 			{
 				sum += 2 * Function(_a + i * h);
 			}
