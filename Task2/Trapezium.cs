@@ -42,7 +42,7 @@ namespace Task2
 
 		private double TrapeziumCalc()
 		{
-			double h = (_b - _a) / (N - 1);
+			double h = (_b - _a) / N;
 			double sum = Function(_a) + Function(_b);
 			for (int i = 1; i < N - 1; i++)
 			{

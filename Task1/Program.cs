@@ -9,18 +9,31 @@ namespace Task1
         {
             Console.OutputEncoding = Encoding.UTF8;
             
-            var polynomial = SourceData.Polynomial;
             var sourceGreed = SourceData.CreateSourceGreed();
             var sourceValues = SourceData.CreateSourceValues(sourceGreed);
             var resultGreed = SourceData.CreateResultGreed();
+            if (!UserConsole.GetValue("Введите порядок полинома", out var polynomial, 1, sourceGreed.Length - 1))
+            {
+                UserConsole.PrintString("Введенное значение не распознается как порядок полинома");
+                UserConsole.Wait();
+                return;
+            }
 
             PrintSource(polynomial, sourceGreed, sourceValues, resultGreed);
 
             var lagrange = new Lagrange(polynomial, sourceGreed, sourceValues, resultGreed);
-            var (firstDerivativeValues, secondDerivativeValues) = lagrange.GetDerivativeValues();
+            var (firstDerivativePolynomialValues, secondDerivativePolynomialValues) = lagrange.GetDerivativePolynomialValues();
+            var (firstDerivativeFunctionValues, secondDerivativeFunctionValues) = lagrange.GetDerivativeFunctionValues();
             var (firstDerivativeResidual, secondDerivativeResidual) = lagrange.GetDerivativeResiduals();
 
-            PrintResult(resultGreed, firstDerivativeValues, secondDerivativeValues, firstDerivativeResidual, secondDerivativeResidual);
+            PrintResult(
+                resultGreed, 
+                firstDerivativeFunctionValues, 
+                secondDerivativeFunctionValues, 
+                firstDerivativePolynomialValues, 
+                secondDerivativePolynomialValues, 
+                firstDerivativeResidual, 
+                secondDerivativeResidual);
 
             UserConsole.Wait();
         }
@@ -29,24 +42,36 @@ namespace Task1
         {
             UserConsole.PrintString("Входные данные");
             UserConsole.PrintNumber("Порядок полинома", polynomial);
-            UserConsole.PrintVector("Исходная сетка узлов", sourceGreed);
-            UserConsole.PrintVector("Значения на исходной сетке", sourceValues);
+            UserConsole.PrintTable(
+                ("x", sourceGreed),
+                ("f(x)", sourceValues));
             UserConsole.PrintVector("Новая сетка узлов", resultGreed);
         }
 
         private static void PrintResult(
             double[] resultGreed, 
-            double[] firstDerivativeValues, 
-            double[] secondDerivativeValues, 
+            double[] firstDerivativeFunctionValues, 
+            double[] secondDerivativeFunctionValues, 
+            double[] firstDerivativePolynomialValues, 
+            double[] secondDerivativePolynomialValues, 
             double[] firstDerivativeResidual, 
             double[] secondDerivativeResidual)
         {
             UserConsole.PrintString("\nВыходные данные");
-            UserConsole.PrintVector("Новая сетка узлов", resultGreed);
-            UserConsole.PrintVector("Значения первой производной", firstDerivativeValues);
-            UserConsole.PrintVector("Значения второй производной", secondDerivativeValues);
-            UserConsole.PrintVector("Погрешность первой производной", firstDerivativeResidual);
-            UserConsole.PrintVector("Погрешность второй производной", secondDerivativeResidual);
+            
+            UserConsole.PrintString("\nПервая производная");
+            UserConsole.PrintTable(
+                ("xi", resultGreed), 
+                ("f'(xi)", firstDerivativeFunctionValues), 
+                ("P'(xi)", firstDerivativePolynomialValues), 
+                ("R'(xi)", firstDerivativeResidual));
+            
+            UserConsole.PrintString("\nВторая производная");
+            UserConsole.PrintTable(
+                ("xi", resultGreed), 
+                ("f''(xi)", secondDerivativeFunctionValues), 
+                ("P''(xi)", secondDerivativePolynomialValues), 
+                ("R''(xi)", secondDerivativeResidual));
         }
     }
 }

@@ -4,8 +4,6 @@ namespace Task1
 {
     public static class SourceData
     {
-        public static int Polynomial { get; } = 3;
-
         public static double[] CreateSourceGreed()
         {
             var greed = new double[26];

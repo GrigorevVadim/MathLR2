@@ -9,9 +9,14 @@ namespace Task3
         {
             Console.OutputEncoding = Encoding.UTF8;
 
+            if (!UserConsole.GetValue("Укажите требуемую точность интегрирования", out var epsilon))
+            {
+                UserConsole.PrintString("Введенное значение не распознается как точность интегрирования");
+                UserConsole.Wait();
+                return;
+            }
             var a = SourceData.A;
             var b = SourceData.B;
-            var epsilon = SourceData.Epsilon;
             var n = SourceData.N;
 
             PrintSource(epsilon, a, b, n);

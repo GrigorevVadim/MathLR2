@@ -9,8 +9,10 @@ namespace Task1
         private readonly double[] _sourceValues;
         private readonly double[] _resultGreed;
         private double[] ResultValues { get; set; }
-        private double[] FirstDerivativeValues { get; set; }
-        private double[] SecondDerivativeValues { get; set; }
+        private double[] FirstDerivativePolynomialValues { get; set; }
+        private double[] FirstDerivativeFunctionValues { get; set; }
+        private double[] SecondDerivativePolynomialValues { get; set; }
+        private double[] SecondDerivativeFunctionValues { get; set; }
         private double[] FirstDerivativeResidual { get; set; }
         private double[] SecondDerivativeResidual { get; set; }
 
@@ -23,16 +25,21 @@ namespace Task1
 
             var resultDimension = _resultGreed.Length;
             ResultValues = new double[resultDimension];
-            FirstDerivativeValues = new double[resultDimension];
-            SecondDerivativeValues = new double[resultDimension];
+            FirstDerivativePolynomialValues = new double[resultDimension];
+            FirstDerivativeFunctionValues = new double[resultDimension];
+            SecondDerivativePolynomialValues = new double[resultDimension];
+            SecondDerivativeFunctionValues = new double[resultDimension];
             FirstDerivativeResidual = new double[resultDimension];
             SecondDerivativeResidual = new double[resultDimension];
 
             Calculate();
         }
 
-        public (double[] firstDerivativeValues, double[] secondDerivativeValues) GetDerivativeValues() =>
-            (FirstDerivativeValues, SecondDerivativeValues);
+        public (double[] firstDerivativePolynomialValues, double[] secondDerivativePolynomialValues) GetDerivativePolynomialValues() =>
+            (FirstDerivativePolynomialValues, SecondDerivativePolynomialValues);
+
+        public (double[] firstDerivativeFunctionValues, double[] secondDerivativeFunctionValues) GetDerivativeFunctionValues() =>
+            (FirstDerivativeFunctionValues, SecondDerivativeFunctionValues);
 
         public (double[] firstDerivativeResidual, double[] secondDerivativeResidual) GetDerivativeResiduals() =>
             (FirstDerivativeResidual, SecondDerivativeResidual);
@@ -99,8 +106,8 @@ namespace Task1
             while (currentElementPosition < _resultGreed.Length)
             {
                 var startElementPosition = GetStartElementByCurrentElement(currentElementPosition);
-                FirstDerivativeValues[currentElementPosition] = CalculateDerivativeElement(currentElementPosition, startElementPosition);
-                SecondDerivativeValues[currentElementPosition] = CalculateSecondDerivativeElement(currentElementPosition, startElementPosition);
+                FirstDerivativePolynomialValues[currentElementPosition] = CalculateDerivativeElement(currentElementPosition, startElementPosition);
+                SecondDerivativePolynomialValues[currentElementPosition] = CalculateSecondDerivativeElement(currentElementPosition, startElementPosition);
 
                 currentElementPosition++;
             }
@@ -217,8 +224,10 @@ namespace Task1
         {
             for (int i = 0; i < _resultGreed.Length; i++)
             {
-                FirstDerivativeResidual[i] = Math.Abs(DerivativeFunctions.FirstDerivative(_resultGreed[i]) - FirstDerivativeValues[i]);
-                SecondDerivativeResidual[i] = Math.Abs(DerivativeFunctions.SecondDerivative(_resultGreed[i]) - SecondDerivativeValues[i]);
+                FirstDerivativeFunctionValues[i] = DerivativeFunctions.FirstDerivative(_resultGreed[i]);
+                FirstDerivativeResidual[i] = Math.Abs(FirstDerivativeFunctionValues[i] - FirstDerivativePolynomialValues[i]);
+                SecondDerivativeFunctionValues[i] = DerivativeFunctions.SecondDerivative(_resultGreed[i]);
+                SecondDerivativeResidual[i] = Math.Abs(SecondDerivativeFunctionValues[i] - SecondDerivativePolynomialValues[i]);
             }
         }
     }

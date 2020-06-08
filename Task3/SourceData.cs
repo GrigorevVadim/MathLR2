@@ -10,6 +10,5 @@ namespace Task3
         public static int N = 6;
         public static double A = 0;
         public static double B = 2;
-        public static double Epsilon = 0.001;
     }
 }
